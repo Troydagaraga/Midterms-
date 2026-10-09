@@ -1,0 +1,187 @@
+using System;
+using System.Collections.Generic;
+
+namespace Problem4
+{
+    struct Student
+    {
+        public string StudentNumber;
+        public string Name;
+        public string Program;
+        public int YearLevel;
+    }
+
+    class Program
+    {
+        static int FindStudent(Student[] students, int count, string number)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                if (students[i].StudentNumber == number)
+                    return i;
+            }
+            return -1;
+        }
+
+        static int ReadYear()
+        {
+            while (true)
+            {
+                Console.Write("Enter Year Level: ");
+                int year;
+                if (int.TryParse(Console.ReadLine(), out year) && year >= 1 && year <= 4)
+                    return year;
+                Console.WriteLine("Invalid! Year level must be 1, 2, 3, or 4.");
+            }
+        }
+
+        static void Main()
+        {
+            Student[] students = new Student[10];
+            int count = 0;
+
+            // each item looks like "Added Juan", "Updated Juan", "Deleted Juan"
+            Stack<string> history = new Stack<string>();
+
+            while (true)
+            {
+                Console.WriteLine("========================================");
+                Console.WriteLine(" STUDENT RECORDS + OPERATION HISTORY");
+                Console.WriteLine("========================================");
+                Console.WriteLine("1. Add Student");
+                Console.WriteLine("2. Update Student");
+                Console.WriteLine("3. Delete Student");
+                Console.WriteLine("4. View Operation History");
+                Console.WriteLine("5. View Last Operation");
+                Console.WriteLine("6. Remove Last Operation");
+                Console.WriteLine("7. Exit");
+                Console.Write("Enter choice: ");
+                string choice = Console.ReadLine();
+
+                if (choice == "1")
+                {
+                    if (count == 10)
+                    {
+                        Console.WriteLine("Array is full! Cannot add more than 10 students.");
+                    }
+                    else
+                    {
+                        Student s = new Student();
+                        Console.Write("Enter Student Number: ");
+                        s.StudentNumber = Console.ReadLine();
+
+                        if (FindStudent(students, count, s.StudentNumber) != -1)
+                        {
+                            Console.WriteLine("Student Number already exists!");
+                        }
+                        else
+                        {
+                            Console.Write("Enter Name: ");
+                            s.Name = Console.ReadLine();
+                            Console.Write("Enter Program: ");
+                            s.Program = Console.ReadLine();
+                            s.YearLevel = ReadYear();
+
+                            students[count] = s;
+                            count++;
+                            history.Push("Added " + s.Name);
+                            Console.WriteLine("Student added successfully!");
+                        }
+                    }
+                }
+                else if (choice == "2")
+                {
+                    Console.Write("Enter Student Number to update: ");
+                    int index = FindStudent(students, count, Console.ReadLine());
+
+                    if (index == -1)
+                    {
+                        Console.WriteLine("Student not found.");
+                    }
+                    else
+                    {
+                        Console.Write("Enter new Name: ");
+                        students[index].Name = Console.ReadLine();
+                        Console.Write("Enter new Program: ");
+                        students[index].Program = Console.ReadLine();
+                        students[index].YearLevel = ReadYear();
+
+                        history.Push("Updated " + students[index].Name);
+                        Console.WriteLine("Student updated successfully!");
+                    }
+                }
+                else if (choice == "3")
+                {
+                    Console.Write("Enter Student Number to delete: ");
+                    int index = FindStudent(students, count, Console.ReadLine());
+
+                    if (index == -1)
+                    {
+                        Console.WriteLine("Student not found.");
+                    }
+                    else
+                    {
+                        history.Push("Deleted " + students[index].Name);
+
+                        // move the next students to the left to fill the gap
+                        for (int i = index; i < count - 1; i++)
+                            students[i] = students[i + 1];
+
+                        count--;
+                        Console.WriteLine("Student deleted successfully!");
+                    }
+                }
+                else if (choice == "4")
+                {
+                    if (history.Count == 0)
+                    {
+                        Console.WriteLine("No recorded operations.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("OPERATION HISTORY");
+
+                        // ToArray puts the newest first, so go backwards to show the oldest first
+                        string[] items = history.ToArray();
+                        int number = 1;
+                        for (int i = items.Length - 1; i >= 0; i--)
+                        {
+                            Console.WriteLine(number + ". " + items[i]);
+                            number++;
+                        }
+                    }
+                }
+                else if (choice == "5")
+                {
+                    if (history.Count == 0)
+                        Console.WriteLine("No recorded operations.");
+                    else
+                        Console.WriteLine("Last Operation: " + history.Peek());   // peek only looks, doesn't remove
+                }
+                else if (choice == "6")
+                {
+                    if (history.Count == 0)
+                    {
+                        Console.WriteLine("No recorded operations.");
+                    }
+                    else
+                    {
+                        history.Pop();   // removes the newest one
+                        Console.WriteLine("Last operation removed successfully!");
+                    }
+                }
+                else if (choice == "7")
+                {
+                    Console.WriteLine("Program exited.");
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid choice.");
+                }
+
+                Console.WriteLine();
+            }
+        }
+    }
+}
