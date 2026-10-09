@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <!-- Four Main() methods in one project: pick which one runs.
+         Change to Problem2.Program, Problem3.Program, or Problem4.Program -->
+    <StartupObject>Problem1.Program</StartupObject>
+  </PropertyGroup>
+
+</Project>
