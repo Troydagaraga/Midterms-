@@ -1,0 +1,88 @@
+using System;
+using System.Collections.Generic;
+
+namespace Problem3
+{
+    struct StudentRequest
+    {
+        public string StudentNumber;
+        public string StudentName;
+        public string RequestType;
+    }
+
+    class Program
+    {
+        static void Main()
+        {
+            Queue<StudentRequest> requests = new Queue<StudentRequest>();
+
+            while (true)
+            {
+                Console.WriteLine("========================================");
+                Console.WriteLine(" STUDENT REQUEST QUEUE");
+                Console.WriteLine("========================================");
+                Console.WriteLine("1. Add Request");
+                Console.WriteLine("2. View Pending Requests");
+                Console.WriteLine("3. Process Request");
+                Console.WriteLine("4. Exit");
+                Console.Write("Enter choice: ");
+                string choice = Console.ReadLine();
+
+                if (choice == "1")
+                {
+                    StudentRequest r = new StudentRequest();
+                    Console.Write("Enter Student Number: ");
+                    r.StudentNumber = Console.ReadLine();
+                    Console.Write("Enter Student Name: ");
+                    r.StudentName = Console.ReadLine();
+                    Console.Write("Enter Request Type: ");
+                    r.RequestType = Console.ReadLine();
+
+                    requests.Enqueue(r);   // goes to the back of the line
+                    Console.WriteLine("Request added successfully!");
+                }
+                else if (choice == "2")
+                {
+                    if (requests.Count == 0)
+                    {
+                        Console.WriteLine("No pending requests.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("REQUEST QUEUE");
+                        int number = 1;
+                        foreach (StudentRequest r in requests)
+                        {
+                            Console.WriteLine(number + ". " + r.StudentName + " - " + r.RequestType);
+                            number++;
+                        }
+                    }
+                }
+                else if (choice == "3")
+                {
+                    if (requests.Count == 0)
+                    {
+                        Console.WriteLine("No pending requests.");
+                    }
+                    else
+                    {
+                        StudentRequest r = requests.Dequeue();   // first in, first out
+                        Console.WriteLine("Processing Request: " + r.StudentName + " - " + r.RequestType);
+                        Console.WriteLine("Request processed successfully!");
+                    }
+                }
+                else if (choice == "4")
+                {
+                    Console.WriteLine("Program exited.");
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid choice.");
+                }
+
+                Console.WriteLine();
+            }
+        }
+    }
+}
