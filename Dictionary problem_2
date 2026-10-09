@@ -1,1 +1,116 @@
+using System;
+using System.Collections.Generic;
 
+namespace Problem2
+{
+    struct Student
+    {
+        public string StudentNumber;
+        public string Name;
+        public string Program;
+        public int YearLevel;
+    }
+
+    class Program
+    {
+        static void ShowStudent(Student s)
+        {
+            Console.WriteLine("Student Number: " + s.StudentNumber);
+            Console.WriteLine("Name: " + s.Name);
+            Console.WriteLine("Program: " + s.Program);
+            Console.WriteLine("Year Level: " + s.YearLevel);
+        }
+
+        static int ReadYear()
+        {
+            while (true)
+            {
+                Console.Write("Enter Year Level: ");
+                int year;
+                if (int.TryParse(Console.ReadLine(), out year) && year >= 1 && year <= 4)
+                    return year;
+                Console.WriteLine("Invalid! Year level must be 1, 2, 3, or 4.");
+            }
+        }
+
+        static void Main()
+        {
+            // key = student number, value = the student
+            Dictionary<string, Student> students = new Dictionary<string, Student>();
+
+            while (true)
+            {
+                Console.WriteLine("========================================");
+                Console.WriteLine(" STUDENT LOOKUP USING DICTIONARY");
+                Console.WriteLine("========================================");
+                Console.WriteLine("1. Add Student");
+                Console.WriteLine("2. Search Student");
+                Console.WriteLine("3. Display All Students");
+                Console.WriteLine("4. Exit");
+                Console.Write("Enter choice: ");
+                string choice = Console.ReadLine();
+
+                if (choice == "1")
+                {
+                    Student s = new Student();
+                    Console.Write("Enter Student Number: ");
+                    s.StudentNumber = Console.ReadLine();
+
+                    if (students.ContainsKey(s.StudentNumber))
+                    {
+                        Console.WriteLine("Student Number already exists!");
+                    }
+                    else
+                    {
+                        Console.Write("Enter Name: ");
+                        s.Name = Console.ReadLine();
+                        Console.Write("Enter Program: ");
+                        s.Program = Console.ReadLine();
+                        s.YearLevel = ReadYear();
+
+                        students.Add(s.StudentNumber, s);
+                        Console.WriteLine("Student added successfully!");
+                    }
+                }
+                else if (choice == "2")
+                {
+                    Console.Write("Enter Student Number to search: ");
+                    string number = Console.ReadLine();
+
+                    Student found;
+                    if (students.TryGetValue(number, out found))
+                    {
+                        Console.WriteLine("Student Found!");
+                        ShowStudent(found);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Student Number not found.");
+                    }
+                }
+                else if (choice == "3")
+                {
+                    if (students.Count == 0)
+                        Console.WriteLine("No student records.");
+
+                    foreach (Student s in students.Values)
+                    {
+                        ShowStudent(s);
+                        Console.WriteLine();
+                    }
+                }
+                else if (choice == "4")
+                {
+                    Console.WriteLine("Program exited.");
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid choice.");
+                }
+
+                Console.WriteLine();
+            }
+        }
+    }
+}
